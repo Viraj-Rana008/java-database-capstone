@@ -8,9 +8,10 @@ Data tier: Data will stored in two databases - MySQL for structured data of pati
 
 # Section 2: Numbered flow
 
-Step-1: Events get triggered at UI. Calls are made for fetching updated Thymleaf html pages or REST APIs.
-Step-2: Events are captured by Thymleaf controller or REST controller. Controllers execute the service and related business logic.
-Step-3: Requests are made to database repositories MySQL or MongoDB for fetching data.
-Step-4: Database repositories query the underlying databases.
-Step-5: Once data is retrieved from the databases it is mapped to Java model classes the application can work with.
-Step-6: Updated model state is passed to view layer to reflect change at the UI.
+- Events get triggered at UI. Calls are made for fetching updated Thymleaf html pages or REST APIs.
+- Events are captured by Thymleaf controller or REST controller. They delegate tasks to the service layer get the updated html or API response.
+- Service layer execute the services and related business logic.
+- Requests are made to database repositories MySQL or MongoDB for fetching data.
+- Database repositories query the underlying databases.
+- Once data is retrieved from the databases it is mapped to Java model classes the application can work with.
+- Updated model state is passed to view layer to reflect change at the UI.
