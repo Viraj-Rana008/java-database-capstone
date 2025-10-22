@@ -2,6 +2,8 @@ package com.project.back_end.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty.Access;
 
 @Entity
 public class Patient {
@@ -22,7 +24,7 @@ public class Patient {
     private String phoneNumber;
 
     @Size(min=6)
-    @JsonProperty(access = Access.WRITE_ONLY)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Size(max=255)
