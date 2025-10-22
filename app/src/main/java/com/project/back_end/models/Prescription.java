@@ -1,6 +1,7 @@
 package com.project.back_end.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Document(collection="prescriptions")
 public class Prescription {

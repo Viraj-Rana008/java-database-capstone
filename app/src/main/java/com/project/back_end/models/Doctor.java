@@ -2,6 +2,7 @@ package com.project.back_end.models;
 
 import java.util.List;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
 public class Doctor {
