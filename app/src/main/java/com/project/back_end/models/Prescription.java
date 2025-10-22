@@ -23,19 +23,19 @@ public class Prescription {
     private String dosage;
 
     @Size(max=200)
-    private String instructions;
+    private String doctorNotes;
 
     Prescription(String patientName, Long appointmentId) {
         this.patientName = patientName;
         this.appointmentId = appointmentId;
     }
 
-    Prescription(String patientName, Long appointmentId, String medication, String dosage, String instructions) {
+    Prescription(String patientName, Long appointmentId, String medication, String dosage, String doctorNotes) {
         this.patientName = patientName;
         this.appointmentId = appointmentId;
         this.medication = medication;
         this.dosage = dosage;
-        this.instructions = instructions;
+        this.doctorNotes = doctorNotes;
     }
 
     public Long getId() {
@@ -68,10 +68,10 @@ public class Prescription {
     public void setDosage(String dosage) {
         this.dosage = dosage;
     }
-    public String getInstructions() {
-        return instructions;
+    public String getDoctorNotes() {
+        return doctorNotes;
     }
-    public void setInstructions(String instructions) {
-        this.instructions = instructions;
+    public void setDoctorNotes(String doctorNotes) {
+        this.doctorNotes = doctorNotes;
     }
 }
