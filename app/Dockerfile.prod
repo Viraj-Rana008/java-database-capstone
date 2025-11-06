@@ -1,0 +1,96 @@
+# Production-optimized Dockerfile for Java Spring Boot Application
+# This variant includes additional optimizations for production environments
+
+# Stage 1: Build stage with dependency caching
+FROM maven:3.9.5-eclipse-temurin-17 AS dependencies
+
+WORKDIR /app
+
+# Copy only pom.xml for dependency resolution
+COPY pom.xml .
+
+# Download all dependencies (will be cached unless pom.xml changes)
+RUN mvn dependency:go-offline -B
+
+# Stage 2: Build application
+FROM maven:3.9.5-eclipse-temurin-17 AS build
+
+WORKDIR /app
+
+# Copy dependencies from previous stage
+COPY --from=dependencies /root/.m2 /root/.m2
+
+# Copy pom.xml and source code
+COPY pom.xml .
+COPY src ./src
+
+# Build application with tests
+RUN mvn clean package -B
+
+# Stage 3: Runtime stage with optimizations
+FROM eclipse-temurin:17-jre-alpine
+
+# Install additional utilities for production monitoring
+RUN apk add --no-cache \
+    curl \
+    wget \
+    bash
+
+# Set working directory
+WORKDIR /app
+
+# Create non-root user with specific UID/GID for security
+RUN addgroup -g 1001 -S spring && \
+    adduser -u 1001 -S spring -G spring
+
+# Copy JAR from build stage
+COPY --from=build /app/target/back-end-0.0.1-SNAPSHOT.jar app.jar
+
+# Change ownership
+RUN chown -R spring:spring /app
+
+# Create directories for logs and temporary files
+RUN mkdir -p /app/logs /app/tmp && \
+    chown -R spring:spring /app/logs /app/tmp
+
+# Switch to non-root user
+USER spring:spring
+
+# Expose application port
+EXPOSE 8080
+
+# Expose management port (if actuator is on different port)
+EXPOSE 9090
+
+# Advanced health check with proper timeout
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+  CMD wget --quiet --tries=1 --spider http://localhost:8080/actuator/health || exit 1
+
+# Production-optimized JVM settings
+ENV JAVA_OPTS="\
+    -XX:+UseContainerSupport \
+    -XX:MaxRAMPercentage=75.0 \
+    -XX:InitialRAMPercentage=50.0 \
+    -XX:+UseG1GC \
+    -XX:+UseStringDeduplication \
+    -XX:+OptimizeStringConcat \
+    -Djava.security.egd=file:/dev/./urandom \
+    -Dspring.profiles.active=prod \
+    -Djava.awt.headless=true \
+    -Dfile.encoding=UTF-8"
+
+# Application metadata
+LABEL maintainer="cms-backend-team" \
+      version="1.0.0" \
+      description="CMS Backend Application" \
+      java.version="17" \
+      spring-boot.version="3.4.4"
+
+# Set timezone (optional)
+ENV TZ=UTC
+
+# Run application with explicit garbage collection logging
+ENTRYPOINT ["sh", "-c", "\
+    exec java $JAVA_OPTS \
+    -XX:+PrintCommandLineFlags \
+    -jar app.jar"]
