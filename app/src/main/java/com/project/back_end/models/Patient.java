@@ -66,4 +66,9 @@ public class Patient {
     public void setAddress(String address) {
         this.address = address;
     }
+    
+    // Alias method for compatibility
+    public String getPhone() {
+        return phoneNumber;
+    }
 }

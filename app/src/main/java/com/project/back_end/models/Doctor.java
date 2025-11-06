@@ -24,6 +24,9 @@ public class Doctor {
     @NotNull(message = "Speciality cannot be null")
     private String speciality;
 
+    @NotNull(message = "Specialty cannot be null")
+    private String specialty;
+
     @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
     private String phoneNumber;
 
@@ -32,7 +35,7 @@ public class Doctor {
     private String password;
 
     @ElementCollection
-    private List<String> availableSlots;
+    private List<AvailableTime> availableTimes;
 
     public Long getId() {
         return id;
@@ -58,6 +61,12 @@ public class Doctor {
     public void setSpeciality(String speciality) {
         this.speciality = speciality;
     }
+    public String getSpecialty() {
+        return specialty;
+    }
+    public void setSpecialty(String specialty) {
+        this.specialty = specialty;
+    }
     public String getPhoneNumber() {
         return phoneNumber;
     }
@@ -70,10 +79,10 @@ public class Doctor {
     public void setPassword(String password) {
         this.password = password;
     }
-    public List<String> getAvailableSlots() {
-        return availableSlots;
+    public List<AvailableTime> getAvailableTimes() {
+        return availableTimes;
     }
-    public void setAvailableSlots(List<String> availableSlots) {
-        this.availableSlots = availableSlots;
+    public void setAvailableTimes(List<AvailableTime> availableTimes) {
+        this.availableTimes = availableTimes;
     }
 }
